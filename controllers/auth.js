@@ -23,8 +23,16 @@ const login = async (req, res) => {
 
   const user = await User.findOne({ email });
 
-  // If user does not exist
+  // throw error If user does not exist
   if (!user) {
+    throw new UnauthenticatedError('Invalid Credentials');
+  }
+
+  // Compare Password
+  const isPasswordCorrect = await user.comparePassword(password);
+
+  // throw error If user does not exist
+  if (!isPasswordCorrect) {
     throw new UnauthenticatedError('Invalid Credentials');
   }
 

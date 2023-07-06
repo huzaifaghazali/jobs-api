@@ -25,14 +25,14 @@ const UserSchema = new mongoose.Schema({
   },
 });
 
-// Mongoose Middleware
+// ***** Mongoose Middleware *****
 // Hash the password
 UserSchema.pre('save', async function () {
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
 });
 
-// Instance method
+// ***** Instance method *****
 // Every document we create we can have function on them
 // Generate token
 UserSchema.methods.createJWT = function () {
@@ -44,5 +44,11 @@ UserSchema.methods.createJWT = function () {
     }
   );
 };
+
+// Compare password when login
+UserSchema.methods.comparePassword = async function(candidatePassword) {
+  const isMatch = await bcrypt.compare(candidatePassword, this.password)
+  return isMatch;
+}
 
 module.exports = mongoose.model('User', UserSchema);
