@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const UserSchema = new mongoose.Schema({
   name: {
@@ -25,10 +26,19 @@ const UserSchema = new mongoose.Schema({
 });
 
 // Mongoose Middleware
-// Hash the password
+  // Hash the password
 UserSchema.pre('save', async function() {
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
 })
+
+// Instance method 
+  // Every document we create we can have function on them
+  // Generate token
+UserSchema.methods.createJWT = function () {
+  return jwt.sign({ userId: this._id, name: this.name }, 'jwtSecret', {
+    expiresIn: '30d',
+  })
+}
 
 module.exports = mongoose.model('User', UserSchema);
