@@ -20,13 +20,14 @@ const getJob = async (req, res) => {
   });
 
   if (!job) {
-    throw new NotFoundError(`No job with id ${job}`);
+    throw new NotFoundError(`No job with id ${jobId}`);
   }
 
   res.status(StatusCodes.OK).json({ job });
 };
 
 const createJob = async (req, res) => {
+   // assign the user id
   req.body.createdBy = req.user.userId;
   const job = await Job.create(req.body);
   res.status(StatusCodes.CREATED).json({ job });
