@@ -21,6 +21,6 @@ const JobSchema = new mongoose.Schema({
       ref: 'User',
       required: [true, 'Please provide user']
    }
-}, {timestamps: true})
+}, {timestamps: true}) // add createdAt, updatedAt fields automatically
 
 module.exports = mongoose.model('Job', JobSchema);
